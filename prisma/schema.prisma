@@ -1,0 +1,17 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql" // or any other supported provider, e.g., mysql, sqlite, etc.  
+  url      = env("DATABASE_URL")
+}
+
+model Pools {
+  id       Int     @id @default(autoincrement())
+  address  String  @unique @db.VarChar(50)
+  name     String  @db.VarChar(50)
+  isClosed Boolean @default(false) @map("is_closed")
+
+  @@map("pools")
+}
