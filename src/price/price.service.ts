@@ -5,10 +5,11 @@ import {
   Wallet,
   setProvider,
 } from '@coral-xyz/anchor';
-import { Connection, Keypair, clusterApiUrl } from '@solana/web3.js';
+import { Connection, Keypair, PublicKey, clusterApiUrl } from '@solana/web3.js';
 
 import { PrismaService } from 'src/prisma/prisma.service';
 import idl from 'idl/solana_program.json';
+import { Prisma } from '@prisma/client';
 
 @Injectable()
 export class PriceService {
@@ -32,7 +33,32 @@ export class PriceService {
     //@ts-ignore
     const program = new Program(idl, provider);
     program.addEventListener('purchaseEvent', (event: any) => {
-      console.log(event, {
+      // const tokenAddress = (event.tokenMint as PublicKey).toBase58();
+
+      // let token = this.prisma.token.findFirst({
+      //   where: {
+      //     address: tokenAddress,
+      //   },
+      // });
+
+      // if (!token) {
+      //   token = this.prisma.token.create({
+      //     data: {
+      //       address: tokenAddress,
+      //       decimals: 8,
+      //       unitAmount: 8 ** 10,
+      //     },
+      //   });
+      // }
+
+      // const tradingData: Prisma.TradingLogCreateInput = {
+      //   amount: 
+      // }
+      console.log("Trading Captured : ", {
+        type: event.transactionType,
+        tokenMint: (event.tokenMint as PublicKey).toBase58(),
+        amount: event.amount.toString(),
+        solAmount: event.solAmount.toString(),
         reserveSol: event.reserveSol.toString(),
         reserveToken: event.reserveToken.toString(),
         totalSupply: event.totalSupply.toString(),

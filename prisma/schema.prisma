@@ -20,7 +20,7 @@ model Pools {
 model Token {
   id         Int          @id @default(autoincrement())
   address    String       @unique @db.VarChar(50)
-  decimials  Int          @db.SmallInt
+  decimals   Int          @db.SmallInt
   unitAmount BigInt       @map("unit_amount")
   name       String?      @db.VarChar(32)
   symbol     String?      @db.VarChar(10)
