@@ -14,4 +14,51 @@ model Pools {
   isClosed Boolean @default(false) @map("is_closed")
 
   @@map("pools")
+  @@ignore
+}
+
+model Token {
+  id         Int          @id @default(autoincrement())
+  address    String       @unique @db.VarChar(50)
+  decimials  Int          @db.SmallInt
+  unitAmount BigInt       @map("unit_amount")
+  name       String?      @db.VarChar(32)
+  symbol     String?      @db.VarChar(10)
+  image      String?      @db.VarChar(10)
+  TradingLog TradingLog[]
+
+  @@map("tokens")
+}
+
+model TradingLog {
+  id        BigInt      @id @default(autoincrement())
+  signature String      @db.VarChar(100)
+  tokenId   Int         @map("token_id")
+  userId    Int?        @map("user_id")
+  amount    BigInt
+  kind      TradingKind
+
+  token Token @relation(fields: [tokenId], references: [id])
+  user  User? @relation(fields: [userId], references: [id])
+
+  @@unique([tokenId, userId])
+  @@map("trading_logs")
+}
+
+model User {
+  id         Int     @id @default(autoincrement())
+  address    String  @unique @db.VarChar(50)
+  username   String? @unique @db.VarChar(20)
+  referrerId Int?    @map("referrer_id")
+
+  logs TradingLog[]
+
+  @@map("users")
+}
+
+enum TradingKind {
+  BUY  @map("buy")
+  SELL @map("sell")
+
+  @@map("trading_kind_enum")
 }
