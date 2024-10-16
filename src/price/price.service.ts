@@ -1,5 +1,11 @@
 import { Injectable, Logger } from '@nestjs/common';
-import anchor, { Program } from '@coral-xyz/anchor';
+import {
+  AnchorProvider,
+  Program,
+  Wallet,
+  setProvider,
+} from '@coral-xyz/anchor';
+import { Connection, Keypair, clusterApiUrl } from '@solana/web3.js';
 
 import { PrismaService } from 'src/prisma/prisma.service';
 import idl from 'idl/solana_program.json';
@@ -14,8 +20,14 @@ export class PriceService {
 
   async initialize() {
     console.log('Pool Service initialized..');
-    const provider = anchor.AnchorProvider.env();
-    anchor.setProvider(provider);
+    const rpcEndpoint = clusterApiUrl('devnet');
+    const connection = new Connection(rpcEndpoint);
+
+    const provider = new AnchorProvider(
+      connection,
+      new Wallet(Keypair.generate()),
+    );
+    setProvider(provider);
 
     //@ts-ignore
     const program = new Program(idl, provider);
