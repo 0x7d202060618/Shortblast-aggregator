@@ -18,24 +18,27 @@ model Pools {
 }
 
 model Token {
-  id         Int          @id @default(autoincrement())
-  address    String       @unique @db.VarChar(50)
-  decimals   Int          @db.SmallInt
-  unitAmount BigInt       @map("unit_amount")
-  name       String?      @db.VarChar(32)
-  symbol     String?      @db.VarChar(10)
-  image      String?      @db.VarChar(10)
-  TradingLog TradingLog[]
+  id         BigInt  @id @default(autoincrement())
+  address    String  @unique @db.VarChar(50)
+  decimals   Int     @default(9) @db.SmallInt
+  unitAmount BigInt  @default(1000000000) @map("unit_amount")
+  name       String? @db.VarChar(32)
+  symbol     String? @db.VarChar(10)
+  image      String? @db.VarChar(10)
+
+  logs   TradingLog[]
+  prices TokenPrice[]
 
   @@map("tokens")
 }
 
 model TradingLog {
   id        BigInt      @id @default(autoincrement())
-  signature String      @db.VarChar(100)
-  tokenId   Int         @map("token_id")
+  // signature String      @db.VarChar(100)
+  tokenId   BigInt      @map("token_id")
   userId    Int?        @map("user_id")
   amount    BigInt
+  solAmount BigInt      @default(0) @map("sol_amount")
   kind      TradingKind
 
   token Token @relation(fields: [tokenId], references: [id])
@@ -54,6 +57,18 @@ model User {
   logs TradingLog[]
 
   @@map("users")
+}
+
+model TokenPrice {
+  id        BigInt   @id @default(autoincrement())
+  tokenId   BigInt   @map("token_id")
+  price     Decimal  @db.Decimal(26, 18)
+  currency  String   @default("sol")
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamp()
+
+  token Token @relation(fields: [tokenId], references: [id])
+
+  @@map("token_prices")
 }
 
 enum TradingKind {

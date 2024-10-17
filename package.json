@@ -27,6 +27,9 @@
     "@nestjs/schedule": "^4.1.1",
     "@prisma/client": "^5.21.0",
     "@solana/web3.js": "^1.95.3",
+    "@types/bn.js": "^5.1.6",
+    "bn.js": "^5.2.1",
+    "decimal.js": "^10.4.3",
     "prisma": "^5.21.0",
     "reflect-metadata": "^0.2.0",
     "rxjs": "^7.8.1"
