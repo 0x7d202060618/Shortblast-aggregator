@@ -13,6 +13,7 @@ import Decimal from 'decimal.js';
 
 import { PrismaService } from 'src/prisma/prisma.service';
 import idl from 'idl/solana_program.json';
+import { calcTokenPrice, calcTokenPrice1 } from 'src/lib/utils';
 
 @Injectable()
 export class PriceService {
@@ -73,7 +74,19 @@ export class PriceService {
           .toString(),
       ).div(10 ** 9);
 
+      const actualPrice = calcTokenPrice(
+        new Decimal(soldToken.toString()),
+        147,
+      );
+
+      const actualPrice1 = calcTokenPrice1(
+        new Decimal(soldToken.toString()),
+        147,
+      );
+
       console.log('price: ', price.toString());
+      console.log('actualPrice: ', actualPrice);
+      console.log('actualPrice1: ', actualPrice1.toString());
 
       const latestPrice = await this.prisma.tokenPrice.findFirst({
         select: {
