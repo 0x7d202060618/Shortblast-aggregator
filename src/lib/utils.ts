@@ -20,7 +20,7 @@ export const calcTokenPrice = (supply: Decimal, solPrice: number) => {
   return new Decimal(
     INITIAL_EXPONENT.mul(supply)
       .div(10 ** 9)
-      .toExponential(),
+      .exp(),
   )
     .mul(INITIAL_PROPORTION)
     .div(10 ** 7)
