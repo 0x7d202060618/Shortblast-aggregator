@@ -1,5 +1,5 @@
 {
-  "address": "SBeGFPgyp2C9Jf7gd2BsdochFXQS9KD3KWn3BkQcAoF",
+  "address": "SB5GU5bacckPJrZpapsTwvwoo5JSAHYVJPJVwuiP5mv",
   "metadata": {
     "name": "solana_program",
     "version": "0.1.0",
@@ -2430,6 +2430,16 @@
       "code": 6015,
       "name": "NegativeNumber",
       "msg": "Amount is negative"
+    },
+    {
+      "code": 6016,
+      "name": "NeedToRefundLastBorrow",
+      "msg": "User needs to refund last borrowed amount"
+    },
+    {
+      "code": 6017,
+      "name": "NoUserBorrow",
+      "msg": "User didn't borrow any amount"
     }
   ],
   "types": [
@@ -2615,6 +2625,16 @@
           {
             "name": "created_at",
             "type": "i64"
+          },
+          {
+            "name": "borrow_info",
+            "type": {
+              "vec": {
+                "defined": {
+                  "name": "UserBorrow"
+                }
+              }
+            }
           }
         ]
       }
@@ -2631,6 +2651,26 @@
           {
             "name": "hourly_borrow_rate",
             "type": "f64"
+          }
+        ]
+      }
+    },
+    {
+      "name": "UserBorrow",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "user",
+            "type": "pubkey"
+          },
+          {
+            "name": "token_amount",
+            "type": "u64"
+          },
+          {
+            "name": "sol_collateral",
+            "type": "u64"
           }
         ]
       }
