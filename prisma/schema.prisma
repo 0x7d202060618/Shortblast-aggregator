@@ -18,13 +18,14 @@ model Pools {
 }
 
 model Token {
-  id         BigInt  @id @default(autoincrement())
-  address    String  @unique @db.VarChar(50)
-  decimals   Int     @default(9) @db.SmallInt
-  unitAmount BigInt  @default(1000000000) @map("unit_amount")
-  name       String? @db.VarChar(32)
-  symbol     String? @db.VarChar(10)
-  image      String? @db.VarChar(10)
+  id          BigInt  @id @default(autoincrement())
+  address     String  @unique @db.VarChar(50)
+  poolAddress String  @unique @map("pool_address") @db.VarChar(50)
+  decimals    Int     @default(9) @db.SmallInt
+  unitAmount  BigInt  @default(1000000000) @map("unit_amount")
+  name        String? @db.VarChar(32)
+  symbol      String? @db.VarChar(10)
+  image       String? @db.VarChar(255)
 
   logs   TradingLog[]
   prices TokenPrice[]

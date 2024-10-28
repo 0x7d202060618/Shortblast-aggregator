@@ -13,7 +13,7 @@ import Decimal from 'decimal.js';
 
 import { PrismaService } from 'src/prisma/prisma.service';
 import idl from 'idl/solana_program.json';
-import { calcTokenPrice } from 'src/lib/utils';
+import { calcTokenPrice, wait } from 'src/lib/utils';
 
 @Injectable()
 export class PriceService {
@@ -35,6 +35,7 @@ export class PriceService {
     //@ts-ignore
     const program = new Program(idl, provider);
     program.addEventListener('purchaseEvent', async (event: any) => {
+      await wait(3000);
       // console.log('Trading Captured : ', {
       //   type: event.transactionType,
       //   tokenMint: (event.tokenMint as PublicKey).toBase58(),
@@ -44,22 +45,28 @@ export class PriceService {
       //   reserveToken: event.reserveToken.toString(),
       //   totalSupply: event.totalSupply.toString(),
       // });
+      console.log('PurchaseEvent: Captured');
       const tokenAddress = (event.tokenMint as PublicKey).toBase58();
 
       let token = await this.prisma.token.findFirst({
+        select: {
+          id: true,
+        },
         where: {
           address: tokenAddress,
         },
       });
 
       if (!token) {
-        token = await this.prisma.token.create({
-          data: {
-            address: tokenAddress,
-            decimals: 9,
-            unitAmount: 10 ** 9,
-          },
-        });
+        console.log('Error: No token matched. ', tokenAddress);
+        return;
+        // token = await this.prisma.token.create({
+        //   data: {
+        //     address: tokenAddress,
+        //     decimals: 9,
+        //     unitAmount: 10 ** 9,
+        //   },
+        // });
       }
 
       const totalSupply = new BN(event.totalSupply.toString()),
@@ -80,6 +87,9 @@ export class PriceService {
       const latestPrice = await this.prisma.tokenPrice.findFirst({
         select: {
           price: true,
+        },
+        where: {
+          tokenId: token.id,
         },
         orderBy: {
           createdAt: Prisma.SortOrder.desc,

@@ -26,3 +26,7 @@ export const calcTokenPrice = (supply: Decimal, solPrice: number) => {
     .div(10 ** 7)
     .mul(solPrice);
 };
+
+export const wait = (ms: number): Promise<void> => {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+};

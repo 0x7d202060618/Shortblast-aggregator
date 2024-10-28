@@ -1,0 +1,2 @@
+-- AlterTable
+ALTER TABLE "tokens" ALTER COLUMN "image" SET DATA TYPE VARCHAR(255);
